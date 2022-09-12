@@ -9,6 +9,7 @@ using UnityEngine;
 public class GenerateCube : MonoBehaviour
 {
     [SerializeField] private Shader shader;
+    [SerializeField] private bool perVertexNormals = false;
     [SerializeField] private PointLight pointLight;
     [SerializeField] private Texture texture;
 
@@ -164,113 +165,118 @@ public class GenerateCube : MonoBehaviour
             Color.blue
         });
 
-        // Task 1: Define the correct normals (as unit vectors; currently they're all "zero")
-        /*var topNormal = new Vector3(0.0f, 0.0f, 0.0f);
-        var bottomNormal = new Vector3(0.0f, 0.0f, 0.0f);
-        var leftNormal = new Vector3(0.0f, 0.0f, 0.0f);
-        var rightNormal = new Vector3(0.0f, 0.0f, 0.0f);
-        var frontNormal = new Vector3(0.0f, 0.0f, 0.0f);
-        var backNormal = new Vector3(0.0f, 0.0f, 0.0f);
+        if(!perVertexNormals){
+            // Task 1: Define the correct normals (as unit vectors; currently they're all "zero")
+            var topNormal = new Vector3(0.0f, 1.0f, 0.0f).normalized;
+            var bottomNormal = new Vector3(0.0f, -1.0f, 0.0f).normalized;
+            var leftNormal = new Vector3(-1.0f, 0.0f, 0.0f).normalized;
+            var rightNormal = new Vector3(1.0f, 0.0f, 0.0f).normalized;
+            var frontNormal = new Vector3(0.0f, 0.0f, 1.0f).normalized;
+            var backNormal = new Vector3(0.0f, 0.0f, -1.0f).normalized;
 
-        mesh.SetNormals(new[]
-        {
-            topNormal, // Top
-            topNormal,
-            topNormal,
-            topNormal,
-            topNormal,
-            topNormal,
+            mesh.SetNormals(new[]
+            {
+                topNormal, // Top
+                topNormal,
+                topNormal,
+                topNormal,
+                topNormal,
+                topNormal,
 
-            bottomNormal, // Bottom
-            bottomNormal,
-            bottomNormal,
-            bottomNormal,
-            bottomNormal,
-            bottomNormal,
+                bottomNormal, // Bottom
+                bottomNormal,
+                bottomNormal,
+                bottomNormal,
+                bottomNormal,
+                bottomNormal,
 
-            leftNormal, // Left
-            leftNormal,
-            leftNormal,
-            leftNormal,
-            leftNormal,
-            leftNormal,
+                leftNormal, // Left
+                leftNormal,
+                leftNormal,
+                leftNormal,
+                leftNormal,
+                leftNormal,
 
-            rightNormal, // Right
-            rightNormal,
-            rightNormal,
-            rightNormal,
-            rightNormal,
-            rightNormal,
+                rightNormal, // Right
+                rightNormal,
+                rightNormal,
+                rightNormal,
+                rightNormal,
+                rightNormal,
 
-            frontNormal, // Front
-            frontNormal,
-            frontNormal,
-            frontNormal,
-            frontNormal,
-            frontNormal,
+                frontNormal, // Front
+                frontNormal,
+                frontNormal,
+                frontNormal,
+                frontNormal,
+                frontNormal,
 
-            backNormal, // Back
-            backNormal,
-            backNormal,
-            backNormal,
-            backNormal,
-            backNormal
-        });*/
+                backNormal, // Back
+                backNormal,
+                backNormal,
+                backNormal,
+                backNormal,
+                backNormal
+            });
+        }
+        else{
+                
 
-        // Smoothed per-vertex-position normals (task 5)
-        var frontBottomLeftNormal = new Vector3(-1.0f, -1.0f, 1.0f).normalized;
-        var frontTopLeftNormal = new Vector3(-1.0f, 1.0f, 1.0f).normalized;
-        var frontTopRightNormal = new Vector3(1.0f, 1.0f, 1.0f).normalized;
-        var frontBottomRightNormal = new Vector3(1.0f, -1.0f, 1.0f).normalized;
-        var backBottomLeftNormal = new Vector3(-1.0f, -1.0f, -1.0f).normalized;
-        var backBottomRightNormal = new Vector3(1.0f, -1.0f, -1.0f).normalized;
-        var backTopLeftNormal = new Vector3(-1.0f, 1.0f, -1.0f).normalized;
-        var backTopRightNormal = new Vector3(1.0f, 1.0f, -1.0f).normalized;
+            // Smoothed per-vertex-position normals (task 5)
+            var frontBottomLeftNormal = new Vector3(-1.0f, -1.0f, 1.0f).normalized;
+            var frontTopLeftNormal = new Vector3(-1.0f, 1.0f, 1.0f).normalized;
+            var frontTopRightNormal = new Vector3(1.0f, 1.0f, 1.0f).normalized;
+            var frontBottomRightNormal = new Vector3(1.0f, -1.0f, 1.0f).normalized;
+            var backBottomLeftNormal = new Vector3(-1.0f, -1.0f, -1.0f).normalized;
+            var backBottomRightNormal = new Vector3(1.0f, -1.0f, -1.0f).normalized;
+            var backTopLeftNormal = new Vector3(-1.0f, 1.0f, -1.0f).normalized;
+            var backTopRightNormal = new Vector3(1.0f, 1.0f, -1.0f).normalized;
 
-        mesh.SetNormals(new[]
-        {
-            backTopLeftNormal, // Top
-            frontTopLeftNormal,
-            frontTopRightNormal,
-            backTopLeftNormal,
-            frontTopRightNormal,
-            backTopRightNormal,
+            mesh.SetNormals(new[]
+            {
+                backTopLeftNormal, // Top
+                frontTopLeftNormal,
+                frontTopRightNormal,
+                backTopLeftNormal,
+                frontTopRightNormal,
+                backTopRightNormal,
 
-            backBottomLeftNormal, // Bottom
-            frontBottomRightNormal,
-            frontBottomLeftNormal,
-            backBottomLeftNormal,
-            backBottomRightNormal,
-            frontBottomRightNormal,
+                backBottomLeftNormal, // Bottom
+                frontBottomRightNormal,
+                frontBottomLeftNormal,
+                backBottomLeftNormal,
+                backBottomRightNormal,
+                frontBottomRightNormal,
 
-            backBottomLeftNormal, // Left
-            frontBottomLeftNormal,
-            frontTopLeftNormal,
-            backBottomLeftNormal,
-            frontTopLeftNormal,
-            backTopLeftNormal,
+                backBottomLeftNormal, // Left
+                frontBottomLeftNormal,
+                frontTopLeftNormal,
+                backBottomLeftNormal,
+                frontTopLeftNormal,
+                backTopLeftNormal,
 
-            backBottomRightNormal, // Right
-            frontTopRightNormal,
-            frontBottomRightNormal,
-            backBottomRightNormal,
-            backTopRightNormal,
-            frontTopRightNormal,
+                backBottomRightNormal, // Right
+                frontTopRightNormal,
+                frontBottomRightNormal,
+                backBottomRightNormal,
+                backTopRightNormal,
+                frontTopRightNormal,
 
-            frontTopLeftNormal, // Front
-            frontBottomRightNormal,
-            frontTopRightNormal,
-            frontTopLeftNormal,
-            frontBottomLeftNormal,
-            frontBottomRightNormal,
+                frontTopLeftNormal, // Front
+                frontBottomRightNormal,
+                frontTopRightNormal,
+                frontTopLeftNormal,
+                frontBottomLeftNormal,
+                frontBottomRightNormal,
 
-            backTopLeftNormal, // Back
-            backTopRightNormal,
-            backBottomRightNormal,
-            backBottomLeftNormal,
-            backTopLeftNormal,
-            backBottomRightNormal
-        });
+                backTopLeftNormal, // Back
+                backTopRightNormal,
+                backBottomRightNormal,
+                backBottomLeftNormal,
+                backTopLeftNormal,
+                backBottomRightNormal
+            });
+        }
 
         // Task 6 (add back in UVs)
         mesh.SetUVs(0, new[]

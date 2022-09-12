@@ -46,6 +46,11 @@ Shader "Unlit/PhongShaderUnityLights"
 {
 	Properties
 	{
+		_Ka("Ka", Float) = 1.0
+		_Kd("Kd", Float) = 1.0
+		_Ks("Ks", Float) = 1.0
+		_fAtt("fAtt", Float) = 1.0
+		_specN("specN", Float) = 1.0
 	}
 	SubShader
 	{
@@ -57,6 +62,12 @@ Shader "Unlit/PhongShaderUnityLights"
 
 			#include "UnityCG.cginc"
 			#include "UnityLightingCommon.cginc"
+
+			uniform float _Ka;
+			uniform float _Kd;
+			uniform float _Ks;
+			uniform float _fAtt;
+			uniform float _specN;
 
 			struct vertIn
 			{
@@ -104,13 +115,13 @@ Shader "Unlit/PhongShaderUnityLights"
 				float3 interpNormal = normalize(v.worldNormal);
 
 				// Calculate ambient RGB intensities
-				float Ka = 1;
+				float Ka = _Ka;
 				float3 amb = v.color.rgb * UNITY_LIGHTMODEL_AMBIENT.rgb * Ka;
 
 				// Calculate diffuse RBG reflections, we save the results of L.N because we will use it again
 				// (when calculating the reflected ray in our specular component)
-				float fAtt = 1;
-				float Kd = 1;
+				float fAtt = _fAtt;
+				float Kd = _Kd;
 				float3 L = _WorldSpaceLightPos0; // Q6: Using built-in Unity light data: _WorldSpaceLightPos0.
 				                                 // Note that we are using a *directional* light in this instance,
 												 // so _WorldSpaceLightPos0 is actually a direction rather than
@@ -120,11 +131,11 @@ Shader "Unlit/PhongShaderUnityLights"
 				float3 dif = fAtt * _LightColor0 * Kd * v.color.rgb * saturate(LdotN); // Q6: Using built-in Unity light data: _LightColor0
 
 				// Calculate specular reflections
-				float Ks = 1;
-				float specN = 5; // Values>>1 give tighter highlights
+				float Ks = _Ks;
+				float specN = _specN; // Values>>1 give tighter highlights
 				float3 V = normalize(_WorldSpaceCameraPos - v.worldVertex.xyz);
 				// Using Blinn-Phong approximation:
-				specN = 25; // We usually need a higher specular power when using Blinn-Phong
+				specN = _specN; // We usually need a higher specular power when using Blinn-Phong
 				float3 H = normalize(V + L);
 				float3 spe = fAtt * _LightColor0 * Ks * pow(saturate(dot(interpNormal, H)), specN); // Q6: Using built-in Unity light data: _LightColor0
 

@@ -36,6 +36,11 @@ Shader "Unlit/PhongShaderTex"
 		_PointLightColor("Point Light Color", Color) = (0, 0, 0)
 		_PointLightPosition("Point Light Position", Vector) = (0.0, 0.0, 0.0)
 		_MainTex ("Texture", 2D) = "white" {}
+		_Ka("Ka", Float) = 1.0
+		_Kd("Kd", Float) = 1.0
+		_Ks("Ks", Float) = 1.0
+		_fAtt("fAtt", Float) = 1.0
+		_specN("specN", Float) = 1.0
 	}
 	SubShader
 	{
@@ -50,6 +55,11 @@ Shader "Unlit/PhongShaderTex"
 			uniform float3 _PointLightColor;
 			uniform float3 _PointLightPosition;
 			uniform sampler2D _MainTex;
+			uniform float _Ka;
+			uniform float _Kd;
+			uniform float _Ks;
+			uniform float _fAtt;
+			uniform float _specN;
 
 			struct vertIn
 			{
@@ -100,26 +110,26 @@ Shader "Unlit/PhongShaderTex"
 				float3 interpNormal = normalize(v.worldNormal);
 
 				// Calculate ambient RGB intensities
-				float Ka = 1;
+				float Ka = _Ka;
 				float3 amb = unlitColor.rgb * UNITY_LIGHTMODEL_AMBIENT.rgb * Ka;
 
 				// Calculate diffuse RBG reflections, we save the results of L.N because we will use it again
 				// (when calculating the reflected ray in our specular component)
-				float fAtt = 1;
-				float Kd = 1;
+				float fAtt = _fAtt;
+				float Kd = _Kd;
 				float3 L = normalize(_PointLightPosition - v.worldVertex.xyz);
 				float LdotN = dot(L, interpNormal);
 				float3 dif = fAtt * _PointLightColor.rgb * Kd * unlitColor.rgb * saturate(LdotN);
 
 				// Calculate specular reflections
-				float Ks = 1;
-				float specN = 5; // Values>>1 give tighter highlights
+				float Ks = _Ks;
+				float specN = _specN; // Values>>1 give tighter highlights
 				float3 V = normalize(_WorldSpaceCameraPos - v.worldVertex.xyz);
 				// Using classic reflection calculation:
 				//float3 R = normalize((2.0 * LdotN * interpNormal) - L);
 				//float3 spe = fAtt * _PointLightColor.rgb * Ks * pow(saturate(dot(V, R)), specN);
 				// Using Blinn-Phong approximation:
-				specN = 25; // We usually need a higher specular power when using Blinn-Phong
+				specN = _specN; // We usually need a higher specular power when using Blinn-Phong
 				float3 H = normalize(V + L);
 				float3 spe = fAtt * _PointLightColor.rgb * Ks * pow(saturate(dot(interpNormal, H)), specN);
 

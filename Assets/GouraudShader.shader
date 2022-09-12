@@ -30,6 +30,11 @@ Shader "Unlit/GouraudShader"
 	{
 		_PointLightColor ("Point Light Color", Color) = (0, 0, 0)
 		_PointLightPosition ("Point Light Position", Vector) = (0.0, 0.0, 0.0)
+		_Ka("Ka", Float) = 1.0
+		_Kd("Kd", Float) = 1.0
+		_Ks("Ks", Float) = 1.0
+		_fAtt("fAtt", Float) = 1.0
+		_specN("specN", Float) = 1.0
 	}
 	SubShader
 	{
@@ -43,6 +48,12 @@ Shader "Unlit/GouraudShader"
 
 			uniform float3 _PointLightColor;
 			uniform float3 _PointLightPosition;
+
+			uniform float _Ka;
+			uniform float _Kd;
+			uniform float _Ks;
+			uniform float _fAtt;
+			uniform float _specN;
 
 			struct vertIn
 			{
@@ -70,20 +81,20 @@ Shader "Unlit/GouraudShader"
 				float3 worldNormal = normalize(mul(transpose((float3x3)unity_WorldToObject), v.normal.xyz));
 
 				// Calculate ambient RGB intensities
-				float Ka = 1;
+				float Ka = _Ka;
 				float3 amb = v.color.rgb * UNITY_LIGHTMODEL_AMBIENT.rgb * Ka;
 
 				// Calculate diffuse RBG reflections, we save the results of L.N because we will use it again
 				// (when calculating the reflected ray in our specular component)
-				float fAtt = 1;
-				float Kd = 1;
+				float fAtt = _fAtt;
+				float Kd = _Kd;
 				float3 L = normalize(_PointLightPosition - worldVertex.xyz);
 				float LdotN = dot(L, worldNormal.xyz);
 				float3 dif = fAtt * _PointLightColor.rgb * Kd * v.color.rgb * saturate(LdotN);
 				
 				// Calculate specular reflections
-				float Ks = 1;
-				float specN = 5; // Values>>1 give tighter highlights
+				float Ks = _Ks;
+				float specN = _specN; // Values>>1 give tighter highlights
 				float3 V = normalize(_WorldSpaceCameraPos - worldVertex.xyz);
 				// Using classic reflection calculation:
 				//float3 R = normalize((2.0 * LdotN * worldNormal) - L);
