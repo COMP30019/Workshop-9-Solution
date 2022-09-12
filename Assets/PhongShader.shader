@@ -119,7 +119,7 @@ Shader "Unlit/PhongShader"
 				//float3 R = normalize((2.0 * LdotN * interpNormal) - L);
 				//float3 spe = fAtt * _PointLightColor.rgb * Ks * pow(saturate(dot(V, R)), specN);
 				// Using Blinn-Phong approximation:
-				specN = 25; // We usually need a higher specular power when using Blinn-Phong
+				specN = _specN; // We usually need a higher specular power when using Blinn-Phong
 				float3 H = normalize(V + L);
 				float3 spe = fAtt * _PointLightColor.rgb * Ks * pow(saturate(dot(interpNormal, H)), specN);
 

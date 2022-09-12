@@ -101,7 +101,7 @@ Shader "Unlit/GouraudShader"
 				//float3 spe = fAtt * _PointLightColor.rgb * Ks * pow(saturate(dot(V, R)), specN);
 				
 				// Alternate solution using Blinn-Phong approximation:
-				specN = 25; // We usually need a higher specular power when using Blinn-Phong
+				specN = _specN; // We usually need a higher specular power when using Blinn-Phong
 				float3 H = normalize(V + L);
 				float3 spe = fAtt * _PointLightColor.rgb * Ks * pow(saturate(dot(worldNormal, H)), specN);
 

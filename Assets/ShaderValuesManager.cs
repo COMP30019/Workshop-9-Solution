@@ -8,7 +8,7 @@ public class ShaderValuesManager : MonoBehaviour
     [Range(0, 1)] [SerializeField] private float kd = 1;
     [Range(0, 1)] [SerializeField] private float ks = 1;
     [Range(0, 1)] [SerializeField] private float fAtt = 1;
-    [Range(1, 500)] [SerializeField] private float specN = 5;
+    [Range(1, 100)] [SerializeField] private float specN = 5;
     // Start is called before the first frame update
     void Start()
     {
